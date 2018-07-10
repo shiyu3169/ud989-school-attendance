@@ -33,23 +33,6 @@ $(function() {
         $allMissed = $('tbody .missed-col'),
         $allCheckboxes = $('tbody input');
 
-    // Count a student's missed days
-    function countMissing() {
-        $allMissed.each(function() {
-            var studentRow = $(this).parent('tr'),
-                dayChecks = $(studentRow).children('td').children('input'),
-                numMissed = 0;
-
-            dayChecks.each(function() {
-                if (!$(this).prop('checked')) {
-                    numMissed++;
-                }
-            });
-
-            $(this).text(numMissed);
-        });
-    }
-
     // Check boxes, based on attendace records
     $.each(attendance, function(name, days) {
         var studentRow = $('tbody .name-col:contains("' + name + '")').parent('tr'),
@@ -82,3 +65,21 @@ $(function() {
 
     countMissing();
 }());
+
+
+// Count a student's missed days
+function countMissing() {
+    $allMissed.each(function() {
+        var studentRow = $(this).parent('tr'),
+            dayChecks = $(studentRow).children('td').children('input'),
+            numMissed = 0;
+
+        dayChecks.each(function() {
+            if (!$(this).prop('checked')) {
+                numMissed++;
+            }
+        });
+
+        $(this).text(numMissed);
+    });
+}
