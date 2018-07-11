@@ -30,14 +30,20 @@
 /* STUDENT APPLICATION */
 $(function() {
 
-    var attendance = JSON.parse(localStorage.attendance);
-        
-
-    var days = attendance[Object.keys(attendance)[0]].length;
-    var students = Object.keys(attendance);
+    let attendance = JSON.parse(localStorage.attendance);
+    const days = attendance[Object.keys(attendance)[0]].length;
+    const students = Object.keys(attendance);
 
     renderDays();
     renderStudents();
+
+    let $allMissed = $('tbody .missed-col'),
+    $allCheckboxes = $('tbody input');
+
+    checkBoxes();
+    updateLocalStorage();
+    countMissing();
+
 
     // renderday row based on days variable
     function renderDays() {
@@ -84,8 +90,7 @@ $(function() {
         }
     }
 
-    let $allMissed = $('tbody .missed-col'),
-    $allCheckboxes = $('tbody input');
+    
     
 
 
@@ -105,36 +110,42 @@ $(function() {
             $(this).text(numMissed);
         });
     }
+    
+// TODO: this should be canged to a event listener
+    function checkBoxes() {
+        // Check boxes, based on attendace records
+        $.each(attendance, function(name, days) {
+            var studentRow = $('tbody .name-col:contains("' + name + '")').parent('tr'),
+                dayChecks = $(studentRow).children('.attend-col').children('input');
 
-    // Check boxes, based on attendace records
-    $.each(attendance, function(name, days) {
-        var studentRow = $('tbody .name-col:contains("' + name + '")').parent('tr'),
-            dayChecks = $(studentRow).children('.attend-col').children('input');
-
-        dayChecks.each(function(i) {
-            $(this).prop('checked', days[i]);
-        });
-    });
-
-    // When a checkbox is clicked, update localStorage
-    $allCheckboxes.on('click', function() {
-        var studentRows = $('tbody .student'),
-            newAttendance = {};
-
-        studentRows.each(function() {
-            var name = $(this).children('.name-col').text(),
-                $allCheckboxes = $(this).children('td').children('input');
-
-            newAttendance[name] = [];
-
-            $allCheckboxes.each(function() {
-                newAttendance[name].push($(this).prop('checked'));
+            dayChecks.each(function(i) {
+                $(this).prop('checked', days[i]);
             });
         });
+    }
 
-        countMissing();
-        localStorage.attendance = JSON.stringify(newAttendance);
-    });
+//TODO: This should be changed to be called every time when one box is clicked
 
-    countMissing();
+    // When a checkbox is clicked, update localStorage
+    function updateLocalStorage() {
+        $allCheckboxes.on('click', function() {
+            var studentRows = $('tbody .student'),
+                newAttendance = {};
+
+            studentRows.each(function() {
+                var name = $(this).children('.name-col').text(),
+                    $allCheckboxes = $(this).children('td').children('input');
+
+                newAttendance[name] = [];
+
+                $allCheckboxes.each(function() {
+                    newAttendance[name].push($(this).prop('checked'));
+                });
+            });
+
+            countMissing();
+            localStorage.attendance = JSON.stringify(newAttendance);
+        });
+    }
+    
 }());
