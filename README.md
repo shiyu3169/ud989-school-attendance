@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://github.com/shiyu3169/ud989-school-attendance)
 
-ud989-school-attendance is an application used to practice
+ud989-school-attendance is an application used to manage student attendance
 
 This is a project for educational purpose
 
